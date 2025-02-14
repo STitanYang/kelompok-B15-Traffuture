@@ -1,7 +1,6 @@
 # kelompok-B15-x
-Senior Project Kelompok B-15
+Senior Project Kelompok B-15<br />
 
-Anggota 1:
-Anggota 2: 
-Anggota 3: 
-Anggota 4: 
+Anggota 1:<br />
+Anggota 2:<br />
+Anggota 3:<br />
