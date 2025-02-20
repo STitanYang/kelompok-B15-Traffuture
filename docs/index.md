@@ -84,3 +84,62 @@ berdasarkan data historis jumlah kendaraan di titik tersebut
    | Kelebihan | Menyediakan rute transportasi umum secara detail, termasuk jadwal keberangkatan dan kedatangan. Memberikan informasi tentang keterlambatan atau gangguan layanan transportasi umum. Bisa digunakan di banyak kota di seluruh dunia |
    | Kekurangan | Tidak berfokus pada pengguna dengan kendaraan pribadi. Tidak memiliki prediksi akan kendala yang akan terjadi. Data kadang kurang akurat karena hanya bergantung pada operator |
    | Key Competitive Advantage & Unique Value | Fokus pada Transportasi Publik. Data Real-Time dari Komunitas. Cakupan Global di Banyak Kota-kota di berbagai negara |
+
+
+## Metodologi SDLC: Agile Scrum
+
+Metodologi Agile Scrum dipakai karena cocok jika proyek dikerjakan dalam tim dan ada banyak iterasi/perubahan, pembagian kerja dalam sprint pendek sehingga memiliki fleksibilitas dalam perubahan fitur, dan cocok untuk eksplorasi dan eksperimen dengan model machine learning.
+
+## Perancangan Tahap 1-3 SDLC
+
+### Tujuan dari Produk
+
+1. Memudahkan pengguna dalam memprediksi lokasi berdasarkan waktu dan tempat yang dipilih.
+2. Meningkatkan efisiensi perencanaan perjalanan atau aktivitas berdasarkan pola prediksi.
+3. Memberikan visualisasi data yang mudah dipahami oleh pengguna untuk mendukung pengambilan keputusan.
+
+### Pengguna Potensial dari Produk dan Kebutuhan Para Pengguna Tersebut 
+
+1. Akademisi/Peneliti 
+   -   Model machine learning yang dapat diuji dan dibandingkan.
+   -   API atau fitur ekspor data untuk analisis lebih lanjut.
+2. Pemerintah
+   -   Prediksi kepadatan suatu lokasi pada waktu tertentu untuk manajemen lalu lintas atau kebijakan publik.
+   -   Visualisasi tren pergerakan untuk perencanaan infrastruktur.
+   -   Integrasi dengan sistem pemantauan kota lainnya.
+3. Masyarakat Umum
+   -   Antarmuka yang intuitif dan mudah digunakan.
+   -   Prediksi lokasi yang akurat untuk membantu perencanaan perjalanan.
+   -   Kemampuan menyimpan atau berbagi hasil prediksi.
+4. Developer
+   -   Dokumentasi API yang jelas untuk pengembangan lanjutan.
+   -   Sistem log error/debugging untuk meningkatkan performa.
+
+### Use Case Diagram
+![Use case diagram](usecase.png)
+
+### Functional Requirements untuk Use Case yang Telah Dirancang
+
+| FR | Deskripsi |
+| --- | --- |
+| Autentikasi Pengguna | Sistem harus memungkinkan pengguna untuk Login/Sign In menggunakan akun terdaftar. Sistem harus menampilkan pesan error jika pengguna memasukkan kredensial yang salah. Sistem harus mendukung fitur logout untuk mengakhiri sesi pengguna. |
+| Pemilihan Lokasi dan Waktu | Pengguna dapat memilih lokasi dan rentang waktu untuk melihat data lalu lintas terkini maupun data lalu lintas prediksi. Sistem harus menampilkan daftar lokasi yang tersedia. Sistem harus memungkinkan pengguna untuk mengatur rentang waktu. |
+| Informasi Lalu Lintas | Pengguna dapat melihat kondisi lalu lintas terkini berdasarkan lokasi yang dipilih. Sistem harus menampilkan informasi secara real-time. Pengguna dapat melihat prediksi lalu lintas berdasarkan data historis dan model machine learning. Sistem harus menampilkan data historis lalu lintas untuk periode tertentu. |
+| Berita lalu Lintas | Pengguna dapat membaca berita lalu lintas berdasarkan geolokasi mereka. Sistem harus mengambil berita dari sumber terpercaya dan menampilkan berita terbaru. |
+| Pelaporan Gangguan Lalu Lintas | Pengguna dapat melaporkan gangguan lalu lintas, seperti kecelakaan atau jalan rusak. Laporan harus mencakup lokasi, jenis gangguan, dan waktu kejadian. |
+| Manajemen Data oleh Admin | Admin dapat mengupdate data gangguan lalu lintas berdasarkan laporan pengguna. Admin dapat menghapus atau memperbarui laporan gangguan jika diperlukan. Sistem harus mendukung perawatan website, termasuk pembaruan konten dan pemeliharaan sistem.|
+
+### Entity Relationship Diagram
+![Entity Relationship Diagram](ERD.png)
+
+### Low-fidelity Wireframe
+
+1. Halaman Login
+   ![Halaman Login](login.png)
+2. Halaman Dashboard
+   ![Halaman Dashboard](dashboard.png)
+3. Halaman Lalu Lintas
+   ![Halaman Lalu Lintas](lalulintas.png)
+
+### Gantt-Chart Pengerjaan Proyek dalam Kurun Waktu Satu Semester
+![Gantt-Chart](gantt-chart.png)
