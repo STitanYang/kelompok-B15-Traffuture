@@ -3,7 +3,7 @@
 | Nama | NIM | Peran |
 | ---- | --- | ----- |
 | Sean Titan Yang | `22/492933/TK/53965` |Software Engineer (SE) |
-| Athaya Harmana Putri | `21/478179/TK/52693` | AI Engineer (AIE) & Cloud Engineer (CE) |
+| Athaya Harmana Putri | `22/492673/TK/53930` | AI Engineer (AIE) & Cloud Engineer (CE) |
 
 ### Project Senior Project TI
 
