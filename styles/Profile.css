@@ -1,0 +1,68 @@
+.profile-card {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    margin: auto;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ccc;
+  }
+  
+  .profile-name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .edit-button {
+    background: orange;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .detail-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-field {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+  .editable-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .edit-pencil {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: orange;
+    font-size: 18px;
+  }
+  
