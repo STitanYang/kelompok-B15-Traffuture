@@ -1,3 +1,4 @@
+
 import Navbar from "@/Components/navbar";
 import TrendNews from "@/Components/TrendNews"
 import Searching from "@/Components/Searching"

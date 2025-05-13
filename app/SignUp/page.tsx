@@ -16,23 +16,30 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
+    setError('');
+
     if (password !== confirmPassword) {
       setError("Password dan konfirmasi tidak cocok");
       return;
     }
 
+    if (password.length < 8) {
+      setError("Password minimal 8 karakter");
+      return;
+    }
+
     try {
-      const res = await fetch("/api/signup", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
+        credentials: "include", // jika backend kirim cookie
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("auth", "true");
-        router.push("/");
+        router.push("/SignIn"); // redirect setelah register berhasil
       } else {
         setError(data.message || "Sign up gagal");
       }
@@ -40,6 +47,7 @@ const SignUp: React.FC = () => {
       setError("Terjadi kesalahan server");
     }
   };
+
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

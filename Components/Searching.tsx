@@ -12,17 +12,34 @@ const searching: React.FC = () => {
   const [endTime, setEndTime] = useState("");
   const router = useRouter();
 
-  const handleSubmit = () => {
-    const query = new URLSearchParams({
-      search: searchTerm,
-      date: selectedDate,
-      start: startTime,
-      end: endTime,
-    }).toString();
-
-    router.push(`/results?${query}`);
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        search: searchTerm,
+        date: selectedDate,
+        start: startTime,
+        end: endTime,
+      };
+  
+      const res = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        // redirect ke halaman hasil analisis berdasarkan _id dari MongoDB
+        router.push(`/Result/${data.id}`);
+      } else {
+        console.error(data.message || "Gagal menyimpan data");
+      }
+    } catch (error) {
+      console.error("Server error:", error);
+    }
   };
-
+  
   return (
     <div>
     

@@ -1,5 +1,5 @@
 import Navbar from "@/Components/navbar";
-import Article from "@/Components/article"
+import Article from "@/Components/article";
 
 const fullnews: React.FC = () => {
     return (

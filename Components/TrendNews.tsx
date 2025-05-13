@@ -1,13 +1,23 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import '../styles/TrendNews.css'; 
 
-interface TrendCardProps {
-  image: string;
+interface RawNewsItem {
+  _id: string;
   title: string;
+  content: string;
+  imageBase64: string;
 }
 
-const TrendCard: React.FC<TrendCardProps> = ({ image, title }) => {
+interface TrendCardProps {
+  _id: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+}
+
+const TrendCard: React.FC<{ image: string; title: string }> = ({ image, title }) => {
   return (
     <div className="trend-card">
       <div className="trend-image-container">
@@ -18,21 +28,60 @@ const TrendCard: React.FC<TrendCardProps> = ({ image, title }) => {
   );
 };
 
-const IndonesiaTrends: React.FC = () => {
+const HomePage: React.FC = () => {
   const [trends, setTrends] = useState<TrendCardProps[]>([
-    { image: "/assets/macet.jpg", title: "Macet di" },
-    { image: "/assets/macet.jpg", title: "Kemacetan Parah di Bandung" },
-    { image: "/assets/macet.jpg", title: "Kemacetan di Surabaya" },
-    { image: "/assets/macet.jpg", title: "Macet di Bali" },
-    { image: "/assets/macet.jpg", title: "Kemacetan di Jakarta Pusat" },
-    { image: "/assets/macet.jpg", title: "Macet pada Hari Libur" },
-    { image: "/assets/macet.jpg", title: " Menyebabkan Polusi" },
-    { image: "/assets/macet.jpg", title: "Kemacetan di Jakarta Barat" },
-    { image: "/assets/macet.jpg", title: "Kemacetan di Jakarta Barat" },
+    {
+      _id: '1',
+      title: 'Kemacetan Parah di Jakarta',
+      content: 'Kemacetan terjadi di sepanjang Jalan Sudirman hingga Thamrin.',
+      imageUrl: '/assets/macet.jpg',
+    },
+    {
+      _id: '2',
+      title: 'Kemacetan di Surabaya Timur',
+      content: 'Kemacetan panjang akibat perbaikan jalan utama.',
+      imageUrl: '/assets/macet.jpg',
+    },
+    {
+      _id: '3',
+      title: 'Macet Hari Libur di Bandung',
+      content: 'Wisatawan memadati Lembang, menyebabkan kemacetan.',
+      imageUrl: '/assets/macet.jpg',
+    },
   ]);
 
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news');
+        const rawData: RawNewsItem[] = await res.json();
+
+        const processedData: TrendCardProps[] = await Promise.all(
+          rawData.map(async (item) => {
+            const base64Response = await fetch(`data:image/png;base64,${item.imageBase64}`);
+            const blob = await base64Response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+
+            return {
+              _id: item._id,
+              title: item.title,
+              content: item.content,
+              imageUrl,
+            };
+          })
+        );
+
+        setTrends(processedData);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
   return (
-    <div className="max-w-6xl mx-auto py-8">
+    <div className="container">
       {/* Title with horizontal lines */}
       <div className="section-title-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
         <div style={{ flex: 1, height: '0.5px', backgroundColor: 'black', marginRight: '1rem' }}></div>
@@ -43,11 +92,12 @@ const IndonesiaTrends: React.FC = () => {
       </div>
       <div className="grid-container">
         {trends.map((trend, index) => (
-          <TrendCard key={index} image={trend.image} title={trend.title} />
+          <TrendCard key={index} image={trend.imageUrl} title={trend.title} />
         ))}
       </div>
     </div>
   );
+  
 };
 
-export default IndonesiaTrends;
+export default HomePage;

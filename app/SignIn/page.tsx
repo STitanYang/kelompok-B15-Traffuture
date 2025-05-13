@@ -1,17 +1,26 @@
-'use client'
+'use client';
 
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 const SignIn: React.FC = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
+    setError('');
+
+    if (password.length < 8) {
+      setError('Password minimal 8 karakter');
+      return;
+    }
+
     try {
       const res = await fetch('/api/signin', {
         method: 'POST',
@@ -19,20 +28,29 @@ const SignIn: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
+        credentials: 'include'
       });
 
-      const data = await res.json();
-
       if (res.ok) {
-        localStorage.setItem('auth', 'true');
         router.push('/');
       } else {
-        setError(data.message || 'Login gagal');
+        let message = 'Login gagal';
+        try {
+          const data = await res.json();
+          if (data?.message) message = data.message;
+        } catch (jsonErr) {
+          console.warn('Response bukan JSON:', jsonErr);
+        }
+        setError(message);
       }
     } catch (err) {
       setError('Terjadi kesalahan server');
     }
   };
+
+
+    
+      
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -48,11 +66,11 @@ const SignIn: React.FC = () => {
         />
 
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-3 border border-gray-300 rounded-md"
+          className="w-full p-2 mb-3 border font-extralight border-gray-300 rounded-md"
         />
         
         <button

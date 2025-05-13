@@ -56,7 +56,7 @@ const UserProfile: React.FC = () => {
     const fetchProfileImage = async () => {
       try {
         const res = await fetch("/api/user/profile-image");
-        const data = await res.json(); // misalnya { image: "base64..." }
+        const data = await res.json();
   
         if (data.image) {
           const base64Url = `data:image/png;base64,${data.image}`;

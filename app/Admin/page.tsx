@@ -7,7 +7,7 @@ const NewsWriter: React.FC = () => {
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
-  // ⬇️ Fetch berita awal dari backend
+  
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -42,7 +42,6 @@ const NewsWriter: React.FC = () => {
     }
   };
 
-  // ⬇️ Simpan perubahan
   const handlePost = async () => {
     if (!title || !content) {
       alert("Judul dan isi harus diisi!");
