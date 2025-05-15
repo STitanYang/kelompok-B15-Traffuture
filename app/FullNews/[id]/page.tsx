@@ -5,7 +5,7 @@ interface Params {
 }
 
 const getNewsItem = async (id: string) => {
-    const res = await fetch(`http://localhost:9999/api/news/${id}`, {
+    const res = await fetch(`http://20.168.209.228:80/api/news/${id}`, {
         cache: "no-store",
     });
     if (!res.ok) return null;

@@ -36,7 +36,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch('http://localhost:9999/api/news'); // Update your API endpoint
+        const res = await fetch('http://20.168.209.228:80/api/news'); // Update your API endpoint
         const rawData: RawNewsItem[] = await res.json();
 
         // Get the last 4 items from the fetched data
