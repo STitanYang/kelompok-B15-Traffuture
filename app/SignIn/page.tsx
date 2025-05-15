@@ -5,6 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  username: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 
 const SignIn: React.FC = () => {
   const router = useRouter();
@@ -22,7 +31,7 @@ const SignIn: React.FC = () => {
     }
 
     try {
-      const res = await fetch('/api/signin', {
+      const res = await fetch('http://localhost:9999/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,10 +40,34 @@ const SignIn: React.FC = () => {
         credentials: 'include'
       });
 
-      if (res.ok) {
-        router.push('/');
-      } else {
-        let message = 'Login gagal';
+    if (res.ok) {
+  const data = await res.json();
+  const token = data.token;
+
+  console.log("TOKEN:", token); // ⬅️ Pastikan ini bukan undefined/null
+
+  const decoded = jwtDecode<JwtPayload>(token);
+  console.log("DECODED:", decoded); // ⬅️ Lihat hasil decode
+
+  const role = decoded.role;
+
+
+  // Simpan token & role ke cookie
+  Cookies.set('token', token, {
+    expires: 7,
+    secure: true,
+    sameSite: 'Strict',
+    path: '/',
+  });
+
+  // Redirect berdasarkan role
+  if (role === 'administrator') {
+    router.push('/Admin');
+  } else {
+    router.push('/');
+  }
+} else {
+  let message = 'Login gagal';
         try {
           const data = await res.json();
           if (data?.message) message = data.message;
@@ -81,17 +114,6 @@ const SignIn: React.FC = () => {
         </button>
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-        <div className="flex items-center mb-4">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-2 text-black-500 text-sm">Atau Sign In dengan</span>
-          <hr className="flex-grow border-gray-300" />
-        </div>
-        
-        <button className="w-full p-2 border border-gray-300 rounded-md flex items-center justify-center hover:bg-[#FF3E3E] gap-x-2">
-          <Image src="/assets/google.png" alt="Google Logo" width={20} height={20} />
-          Google
-        </button>
 
         <p className="text-sm text-gray-600 mt-4">
           Belum punya akun?

@@ -1,21 +1,50 @@
 "use client";
 import React, { useEffect, useState, ChangeEvent } from "react";
+import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
+interface JwtPayload {
+  username: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 const NewsWriter: React.FC = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [photo, setPhoto] = useState<File | null>(null);
+  const emptyFile = new File([], "");
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [photo, setPhoto] = useState<File>(emptyFile);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+   
+       const router = useRouter();
 
-  
+  useEffect(() => {
+    const token = Cookies.get('token');
+
+    if (!token) {
+      router.push('/SignIn');
+      return;
+    }
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      if (decoded.role !== 'administrator') {
+        router.push('/SignIn');
+      }
+    } catch (err) {
+      console.error("Token tidak valid:", err);
+      router.push('/SignIn');
+    }
+  }, [router]);
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const res = await fetch("/api/news/1"); // endpoint dummy
         const data = await res.json();
 
-        setTitle(data.title);
-        setContent(data.content);
+        setTitle(data.title || '');
+        setContent(data.content || '');
 
         if (data.imageBase64) {
           const base64Url = `data:image/png;base64,${data.imageBase64}`;
@@ -33,7 +62,6 @@ const NewsWriter: React.FC = () => {
     fetchNews();
   }, []);
 
-  // ⬇️ Upload gambar baru
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -42,21 +70,33 @@ const NewsWriter: React.FC = () => {
     }
   };
 
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handlePost = async () => {
     if (!title || !content) {
       alert("Judul dan isi harus diisi!");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    if (photo) formData.append("image", photo);
-
     try {
-      const response = await fetch("/api/news/1", {
+      const token = Cookies.get('token');
+      const response = await fetch("http://localhost:9999/api/news", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          token: `${token}`,
+        },
+        body: JSON.stringify({
+          title: title,  // Include the title directly as a string
+          body: content,
+          image: await convertToBase64(photo) || ""
+        })
       });
 
       if (response.ok) {

@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface RawNewsItem {
-  _id: string;
+  uuid: string;
   title: string;
-  content: string;
+  body: string;
   imageBase64: string;
 }
 
 interface NewsCardItem {
-  _id: string;
+  uuid: string;
   title: string;
   description: string;
   imageUrl: string;
@@ -33,7 +33,8 @@ const NewsCard = ({
     router.push(`/FullNews/${id}`);
   };
 
-  const truncateText = (text: string, maxWords: number) => {
+  const truncateText = (text: string | undefined, maxWords: number) => {
+    if (!text) return "";
     const words = text.trim().split(/\s+/);
     return words.length > maxWords
       ? words.slice(0, maxWords).join(" ") + "..."
@@ -63,57 +64,40 @@ const NewsCard = ({
   );
 };
 
-const TrafficNewsSection = () => {
-  const [articles, setArticles] = useState<NewsCardItem[]>([
-    {
-      _id: "1",
-      title: "Macet di Bali",
-      imageUrl: "/assets/macet.jpg",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel nunc et felis pretium feugiat. Vivamus vitae turpis eu orci sollicitudin tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel nunc et felis pretium feugiat. Vivamus vitae turpis eu orci sollicitudin tempor.",
-    },
-    {
-      _id: "2",
-      title: "Kemacetan di Jakarta",
-      imageUrl: "/assets/macet.jpg",
-      description:
-        "Seorang pengantin pria di Palembang, Sumatera Selatan, Ahmad Handa (30), dibacok dan ditembak ketika hendak melangsungkan pernikahannya. Motif kasus tersebut diduga akibat dendam pelaku pada enam tahun silam karena korban dianggap cepu oleh para pelaku.Dia ini menuduh aku jadi cepu (narkoba), tapi aku tidak merasa. Ini dendam lama, kejadiannya tahun 2019, ungkap Ahmad, dilansir detikSumbagsel, Senin (12/5/2025).Baca juga: Ngeri! Pria di Palembang Bacok dan Tembak Pengantin Pria yang Mau Akad"
+const ITEMS_PER_PAGE = 5;
 
-    },
-    {
-     _id: "3",
-      title: "Macet pada Hari Libur",
-      imageUrl: "/assets/macet.jpg",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel nunc et felis pretium feugiat. Vivamus vitae turpis eu orci sollicitudin tempor.",
-    },
-    {
-      _id: "4",
-      title: "Kemacetan Parah di Bandung",
-      imageUrl: "/assets/macet.jpg",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel nunc et felis pretium feugiat. Vivamus vitae turpis eu orci sollicitudin tempor.",
-    }
-  ]);
+const TrafficNewsSection = () => {
+  const [articles, setArticles] = useState<NewsCardItem[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const totalPages = Math.ceil(articles.length / ITEMS_PER_PAGE);
+  const currentData = articles.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch("/api/news");
+        const res = await fetch("http://localhost:9999/api/news");
         const rawData: RawNewsItem[] = await res.json();
 
         const processedData: NewsCardItem[] = await Promise.all(
           rawData.map(async (item) => {
-            const base64Response = await fetch(
-              `data:image/png;base64,${item.imageBase64}`
-            );
-            const blob = await base64Response.blob();
-            const imageUrl = URL.createObjectURL(blob);
+            let imageUrl = "";
+            try {
+              const base64Response = await fetch(`${item.imageBase64}`);
+              const blob = await base64Response.blob();
+              imageUrl = URL.createObjectURL(blob);
+            } catch (err) {
+              console.warn("Failed to convert imageBase64:", err);
+              imageUrl = "/fallback-image.jpg";
+            }
 
             return {
-              _id: item._id,
+              uuid: item.uuid,
               title: item.title,
-              description: item.content,
+              description: item.body,
               imageUrl,
             };
           })
@@ -130,15 +114,36 @@ const TrafficNewsSection = () => {
 
   return (
     <section className="max-w-5xl mx-auto px-4 py-10">
-      {articles.map((item) => (
+      {currentData.map((item) => (
         <NewsCard
-          key={item._id}
-          id={item._id}
+          key={item.uuid}
+          id={item.uuid}
           imageSrc={item.imageUrl}
           title={item.title}
           description={item.description}
         />
       ))}
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center gap-4 mt-8">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </section>
   );
 };

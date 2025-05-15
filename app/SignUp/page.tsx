@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SignUp: React.FC = () => {
   const router = useRouter();
@@ -29,10 +30,10 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const res = await fetch("/api/register", {
+      const res = await fetch("http://localhost:9999/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({username, email, password}),
         credentials: "include", // jika backend kirim cookie
       });
 
@@ -97,17 +98,12 @@ const SignUp: React.FC = () => {
         >
           SIGN UP
         </button>
-
-        <div className="flex items-center mb-4">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-2 text-black-500 text-sm">Atau Sign Up dengan</span>
-          <hr className="flex-grow border-gray-300" />
-        </div>
-
-        <button className="w-full p-2 border border-gray-300 rounded-md flex items-center justify-center hover:bg-[#FF3E3E] gap-x-2">
-          <Image src="/assets/google.png" alt="Google Logo" width={20} height={20} />
-          Google
-        </button>
+        <p className="text-sm text-gray-600 mt-4">
+          Sudah punya akun?
+          <Link href="/SignIn" className="text-[#FF3E3E] font-semibold ml-1">
+            Klik disini
+          </Link>
+        </p>
       </div>
     </div>
   );

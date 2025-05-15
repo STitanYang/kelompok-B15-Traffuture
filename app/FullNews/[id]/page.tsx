@@ -6,7 +6,7 @@ interface Params {
 }
 
 const getNewsItem = async (id: string) => {
-const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news/${id}`, {
+const res = await fetch(`http://localhost:9999/api/news/${id}`, {
 cache: "no-store",
       });
   if (!res.ok) return null;
@@ -27,11 +27,11 @@ export default async function FullNewsPage({ params }: Params) {
       <div className="max-w-5xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold mb-4">{newsItem.title}</h1>
         <img
-          src={`data:image/png;base64,${newsItem.imageBase64}`}
+          src={`${newsItem.imageBase64}`}
           alt={newsItem.title}
           className="w-full h-auto object-cover mb-4"
         />
-        <p className="text-gray-700 whitespace-pre-line">{newsItem.content}</p>
+        <p>{newsItem.body}</p>
       </div>
     </div>
   );
