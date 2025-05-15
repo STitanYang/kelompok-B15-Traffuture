@@ -3,19 +3,26 @@ import { MongoClient } from "mongodb";
 const uri = process.env.MONGODB_URI!;
 const options = {};
 
-// Tambahkan deklarasi ini 👇 di atas semua kode yang pakai globalThis
+// ✅ Type-safe global untuk TypeScript
 declare global {
+  namespace NodeJS {
+    interface Global {
+      _mongoClientPromise?: Promise<MongoClient>;
+    }
+  }
+
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-// ⛔️ Hapus error dengan deklarasi properti di globalThis
-let client;
+// ⛔ Jangan gunakan `var`, gunakan `let` atau langsung assign
+let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
-if (!global._mongoClientPromise) {
+// ✅ Cek dan simpan di globalThis untuk reuse antar-hot-reload
+if (!globalThis._mongoClientPromise) {
   client = new MongoClient(uri, options);
-  global._mongoClientPromise = client.connect();
+  globalThis._mongoClientPromise = client.connect();
 }
-clientPromise = global._mongoClientPromise;
+clientPromise = globalThis._mongoClientPromise;
 
 export default clientPromise;
