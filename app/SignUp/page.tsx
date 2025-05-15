@@ -11,7 +11,7 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const showPassword = false;
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
         setError(data.message || "Sign up gagal");
       }
     } catch (err) {
-      setError("Terjadi kesalahan server");
+      setError(`Terjadi kesalahan server ${err}`);
     }
   };
 
