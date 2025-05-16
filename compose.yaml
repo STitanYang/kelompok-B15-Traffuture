@@ -2,6 +2,6 @@ services:
   app:
     build:
       context: .
-      target: dev
+      target: prod
     ports:
       - "80:3000"
