@@ -79,7 +79,7 @@ const TrafficNewsSection = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch("http://localhost:9999/api/news");
+        const res = await fetch("http://localhost:9999/news");
         const rawData: RawNewsItem[] = await res.json();
 
         const processedData: NewsCardItem[] = await Promise.all(

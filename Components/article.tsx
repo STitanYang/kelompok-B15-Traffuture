@@ -11,7 +11,7 @@ const FullNews = () => {
     if (id) {
       const fetchNewsItem = async () => {
         try {
-          const res = await fetch(`pages/api/FullNews/${id}`);
+          const res = await fetch(`pages/FullNews/${id}`);
           const data = await res.json();
           setNewsItem(data); // Set data berita yang diterima
         } catch (error) {

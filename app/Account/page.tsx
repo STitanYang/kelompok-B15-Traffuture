@@ -2,7 +2,7 @@
 "use client";
 import Navbar from "@/Components/navbar";
 import Profile from "@/Components/profile";
-import History from "@/Components/history";
+// import History from "@/Components/history";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -42,7 +42,7 @@ const Page: React.FC = () => {
     <div className="min-h-screen bg-gray-300"> {/* Menambahkan background abu-abu untuk halaman */}
       <Navbar /> {/* Navbar tetap di luar container */}
       <Profile /> {/* Profile tetap di luar container */}
-      <History />
+      {/* <History /> */}
     </div>
   );
 };

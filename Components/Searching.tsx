@@ -2,23 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";  // Import Bar chart
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,       // Import BarElement untuk Bar chart
   Tooltip,
   Legend,
 } from "chart.js";
 import { ChartData } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend); // Daftarkan BarElement
 
-type TrafficChartData = ChartData<"line", number[], string>;
+type TrafficChartData = ChartData<"bar", number[], string>;  // Ganti ke "bar"
 
-// Tambahkan di dalam komponen Searching (di atas handleSubmit)
 const dummyTrafficDatabase: Record<string, Record<string, number[]>> = {
   "Tugu Jogja": {
     "2025-05-14": [30, 40, 50, 60, 55, 45, 35, 30, 30, 40, 50, 60, 55, 45, 35, 30, 30, 40, 50, 60, 55, 45, 35, 30],
@@ -42,29 +40,19 @@ const dummyTrafficDatabase: Record<string, Record<string, number[]>> = {
   },
 };
 
-
 const Searching: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [resultData, setResultData] = useState<any[] | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
   const [chartData, setChartData] = useState<TrafficChartData>({
       labels: [],
       datasets: [],
-    })
-  // const handleSubmit = async () => {
-  //   try {
-  //     const payload = {
-  //       search: searchTerm,
-  //       date: selectedDate,
-  //       start: startTime,
-  //       end: endTime,
-  //     };
+    });
 
-    const handleSubmit = () => {
+  const handleSubmit = () => {
     const payload = {
       search: searchTerm,
       date: selectedDate,
@@ -72,81 +60,71 @@ const Searching: React.FC = () => {
       end: endTime,
     };
 
-      // Simpan ke localStorage
     localStorage.setItem("searchData", JSON.stringify(payload));
     setSubmitCount((prev) => prev + 1);
     setShowResult(true);
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("searchData");
-    if (!saved) return;
+useEffect(() => {
+  const saved = localStorage.getItem("searchData");
+  if (!saved) return;
 
-    const input = JSON.parse(saved);
+  const input = JSON.parse(saved);
 
-    // Generate dummy prediction based on input
-    const generateDummyData = () => {
-  const hours = [
-    "00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
-    "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
-    "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
-    "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
-  ];
+  const generateDummyData = () => {
+    const hours = [
+      "00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
+      "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+      "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+      "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
+    ];
 
-  const startIndex = hours.indexOf(input.start);
-  const endIndex = hours.indexOf(input.end);
+    const startIndex = hours.indexOf(input.start);
+    const endIndex = hours.indexOf(input.end);
 
-  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+      return {
+        labels: [],
+        datasets: [],
+      };
+    }
+
+    const selectedHours = hours.slice(startIndex, endIndex + 1);
+    const locationData = dummyTrafficDatabase[input.search]?.[input.date];
+
+    const actualData =
+      locationData && locationData.length >= endIndex + 1
+        ? locationData.slice(startIndex, endIndex + 1)
+        : selectedHours.map(() => Math.floor(20 + Math.random() * 80));
+
+    const predictionData = actualData.map((val) =>
+      Math.min(100, Math.max(0, val + (Math.random() > 0.5 ? 10 : -10)))
+    );
+
     return {
-      labels: [],
-      datasets: [],
+      labels: selectedHours,
+      datasets: [
+        {
+          label: `Waktu Aktual`,
+          data: actualData,
+          backgroundColor: "rgba(255, 99, 132, 0.7)", // merah
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+        {
+          label: `Prediksi `,
+          data: predictionData,
+          backgroundColor: "rgba(54, 162, 235, 0.7)", // biru
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+      ],
     };
-  }
-
-  const selectedHours = hours.slice(startIndex, endIndex + 1);
-  const locationData = dummyTrafficDatabase[input.search]?.[input.date];
-
-  const dummyDensity =
-    locationData && locationData.length >= endIndex + 1
-      ? locationData.slice(startIndex, endIndex + 1)
-      : selectedHours.map(() => Math.floor(20 + Math.random() * 80));
-
-  return {
-    labels: selectedHours,
-    datasets: [
-      {
-        label: `Prediksi Kepadatan (${input.search})`,
-        data: dummyDensity,
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        tension: 0.4,
-        fill: true,
-      },
-    ],
   };
-};
 
-    setChartData(generateDummyData());
-  }, [submitCount]);
-  //     const res = await fetch("/api/search", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(payload),
-  //     });
+  setChartData(generateDummyData());
+}, [submitCount]);
 
-  //     const data = await res.json();
-
-  //     if (res.ok) {
-  //       const trafficRes = await fetch(`/api/traffic-data?id=${data.id}`);
-  //       const trafficData = await trafficRes.json();
-  //       setResultData(trafficData);
-  //     } else {
-  //       console.error(data.message || "Gagal menyimpan data");
-  //     }
-  //   } catch (error) {
-  //     console.error("Server error:", error);
-  //   }
-  // };
 
   return (
     <div className="container mx-auto p-4 text-center">
@@ -181,8 +159,8 @@ const Searching: React.FC = () => {
             className="outline-none"
           >
             {Array.from({ length: 24 }, (_, i) => (
-              <option key={i} value={`${String(i).padStart(2, '0')}:00`}>
-                {`${String(i).padStart(2, '0')}:00`}
+              <option key={i} value={`${String(i).padStart(2, "0")}:00`}>
+                {`${String(i).padStart(2, "0")}:00`}
               </option>
             ))}
           </select>
@@ -193,8 +171,8 @@ const Searching: React.FC = () => {
             className="outline-none"
           >
             {Array.from({ length: 24 }, (_, i) => (
-              <option key={i} value={`${String(i).padStart(2, '0')}:00`}>
-                {`${String(i).padStart(2, '0')}:00`}
+              <option key={i} value={`${String(i).padStart(2, "0")}:00`}>
+                {`${String(i).padStart(2, "0")}:00`}
               </option>
             ))}
           </select>
@@ -206,14 +184,17 @@ const Searching: React.FC = () => {
       >
         Find Results
       </button>
-      {/* {resultData && <Results data={resultData} />} */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mt-8 w-[600px] mx-auto">
-          <Line data={chartData} />
-          <div className="mt-4 text-sm text-black">
-            <p>X = Jam</p>
-            <p>Y = Tingkat Kepadatan Lalu Lintas</p>
-          </div>
+      <div className="bg-white rounded-2xl shadow-md p-6 mt-8 w-[600px] mx-auto">
+        <Bar data={chartData} /> {/* Ganti Line ke Bar */}
+        <div className="mt-4 text-sm text-black">
+          <p>X = Jam</p>
+          <p>Y = Tingkat Kepadatan Lalu Lintas</p>
+          <p>0 (Lalu Lintas Lancar)</p>
+          <p>1 (Lalu Lintas Mulai Padat)</p>
+          <p>2 (Lalu Lintas Cukup Padat)</p>
+          <p>3 (Lalu Lintas Sangat)</p>
         </div>
+      </div>
     </div>
   );
 };

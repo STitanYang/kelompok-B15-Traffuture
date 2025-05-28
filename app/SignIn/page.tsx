@@ -23,63 +23,61 @@ const SignIn: React.FC = () => {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    setError('');
+  setError('');
 
-    if (password.length < 8) {
-      setError('Password minimal 8 karakter');
-      return;
-    }
+  if (password.length < 8) {
+    setError('Password minimal 8 karakter');
+    return;
+  }
 
-    try {
-      const res = await fetch('http://localhost:9999/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include'
-      });
+  try {
+    const res = await fetch('http://localhost:9999/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+      credentials: 'include'
+    });
 
     if (res.ok) {
-  const data = await res.json();
-  const token = data.token;
+      const data = await res.json();
+      const token = data.token;
 
-  console.log("TOKEN:", token); // ⬅️ Pastikan ini bukan undefined/null
+      const decoded = jwtDecode<JwtPayload>(token);
 
-  const decoded = jwtDecode<JwtPayload>(token);
-  console.log("DECODED:", decoded); // ⬅️ Lihat hasil decode
+      // ⬇️ Simpan data ke localStorage setelah decode token
+      localStorage.setItem('username', decoded.username);
+      localStorage.setItem('role', decoded.role);
+      Cookies.set('token', token, {
+        expires: 7,
+        secure: true,
+        sameSite: 'Strict',
+        path: '/',
+      });
 
-  const role = decoded.role;
-
-
-  // Simpan token & role ke cookie
-  Cookies.set('token', token, {
-    expires: 7,
-    secure: true,
-    sameSite: 'Strict',
-    path: '/',
-  });
-
-  // Redirect berdasarkan role
-  if (role === 'administrator') {
-    router.push('/Admin');
-  } else {
-    router.push('/');
-  }
-} else {
-  let message = 'Login gagal';
-        try {
-          const data = await res.json();
-          if (data?.message) message = data.message;
-        } catch (jsonErr) {
-          console.warn('Response bukan JSON:', jsonErr);
-        }
-        setError(message);
+      // Redirect berdasarkan role
+      if (decoded.role === 'administrator') {
+        router.push('/Admin');
+      } else {
+        router.push('/');
       }
-    } catch (err) {
-      setError('Terjadi kesalahan server');
+
+    } else {
+      let message = 'Login gagal';
+      try {
+        const data = await res.json();
+        if (data?.message) message = data.message;
+      } catch (jsonErr) {
+        console.warn('Response bukan JSON:', jsonErr);
+      }
+      setError(message);
     }
-  };
+  } catch (err) {
+    setError('Terjadi kesalahan server');
+  }
+};
+
 
 
     
