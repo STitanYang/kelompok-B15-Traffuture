@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -13,7 +11,7 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const showPassword = false;
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
@@ -46,6 +44,7 @@ const SignUp: React.FC = () => {
       }
     } catch (err) {
       setError("Terjadi kesalahan server");
+      console.log(err)
     }
   };
 

@@ -14,7 +14,7 @@ interface JwtPayload {
   exp: number;
 }
 
-const news: React.FC = () => {
+const Nnews: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -44,5 +44,5 @@ const news: React.FC = () => {
   );
 }
 
-export default news;
+export default Nnews;
 

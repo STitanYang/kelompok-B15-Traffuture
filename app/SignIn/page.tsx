@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 
@@ -18,7 +16,7 @@ interface JwtPayload {
 const SignIn: React.FC = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const showPassword = false;
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -75,6 +73,7 @@ const SignIn: React.FC = () => {
     }
   } catch (err) {
     setError('Terjadi kesalahan server');
+    console.log(err)
   }
 };
 
