@@ -1,9 +1,21 @@
 "use client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+
+interface NewsItem {
+  title: string;
+  content: string;
+  imageBase64: string;
+}
 
 const FullNews = () => {
-  const [newsItem, setNewsItem] = useState<any>(null); // Menyimpan data berita detail
+  const [newsItem, setNewsItem] = useState<NewsItem>({
+  title: "",
+  content: "",
+  imageBase64: "",
+});
+
   const { query } = useRouter(); // Mengambil ID dari URL
   const { id } = query;
 
@@ -30,7 +42,7 @@ const FullNews = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-4">{newsItem.title}</h1>
-      <img
+      <Image
         src={`data:image/png;base64,${newsItem.imageBase64}`} // Menampilkan gambar berdasarkan Base64
         alt={newsItem.title}
         className="w-full h-auto object-cover mb-4"

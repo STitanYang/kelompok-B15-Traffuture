@@ -3,6 +3,7 @@ import React, { useEffect, useState, ChangeEvent } from "react";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import Image from "next/image";
 
 interface JwtPayload {
   username: string;
@@ -118,7 +119,7 @@ const NewsWriter: React.FC = () => {
       <div style={styles.form}>
         <label htmlFor="photo-upload" style={styles.photoBox}>
           {photoPreview ? (
-            <img src={photoPreview} alt="Preview" style={styles.imagePreview} />
+            <Image src={photoPreview} alt="Preview" style={styles.imagePreview} />
           ) : (
             <>
               <div style={styles.plus}>+</div>

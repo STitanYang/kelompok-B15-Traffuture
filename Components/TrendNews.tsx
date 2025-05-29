@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';  // Correct import for useRouter
 import '../styles/TrendNews.css';
+import Image from 'next/image';
 
 interface RawNewsItem {
   uuid: string;
@@ -22,7 +23,7 @@ const TrendCard: React.FC<{ image: string; title: string; onClick: () => void }>
   return (
     <div className="trend-card" onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="trend-image-container">
-        <img src={image} alt="Trend" className="trend-image" />
+        <Image src={image} alt="Trend" className="trend-image" />
         <div className="trend-overlay">{title}</div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, act } from "react"; // Added useMemo
+import { useState, useEffect, useMemo } from "react"; // Added useMemo
 import { FaSearch } from "react-icons/fa";
 import { Bar } from "react-chartjs-2";
 import {
@@ -13,7 +13,6 @@ import {
   Title, // Added Title for chart
 } from "chart.js";
 import { ChartData } from "chart.js";
-import { start } from "repl";
 
 // Corrected interface
 interface RawDataInterface {
@@ -183,9 +182,9 @@ useEffect(() => {
           ],
         });
 
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error in fetchDataAndSetChart:", error);
-        setError(error.message || "An unknown error occurred");
+        console.log(error)
       } finally {
         setIsLoading(false);
       }

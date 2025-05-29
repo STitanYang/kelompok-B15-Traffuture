@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface RawNewsItem {
   uuid: string;
@@ -43,7 +44,7 @@ const NewsCard = ({
 
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-10">
-      <img
+      <Image
         src={imageSrc}
         alt="Berita"
         className="w-full md:w-64 h-auto object-cover rounded-md"

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Pencil, Check } from "lucide-react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 const DEFAULT_IMAGE = "https://cdn-icons-png.flaticon.com/512/1077/1077114.png";
 
 interface JwtPayload {
@@ -11,7 +11,6 @@ interface JwtPayload {
 }
 
 const UserProfile: React.FC = () => {
-  const router = useRouter;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [image, setimage] = useState(DEFAULT_IMAGE);
@@ -133,7 +132,7 @@ useEffect(() => {
       {/* Kiri: Profile */}
       <div className="bg-white rounded-xl p-6 flex flex-col items-center justify-center gap-2 shadow w-full md:w-[300px] text-center">
         <div className="text-5xl mb-2">
-          <img
+          <Image
             src={image || DEFAULT_IMAGE}
             alt="Preview"
             className="w-24 h-24 rounded-full object-cover"
