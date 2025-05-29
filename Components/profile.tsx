@@ -60,7 +60,7 @@ const UserProfile: React.FC = () => {
     };
 
     try {
-      const res = await fetch(`http://localhost:9999/user/${currentUsername}`, {
+      const res = await fetch(`http://20.168.209.228/user/${currentUsername}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ useEffect(() => {
     const currentUsername = decoded.username;
 
     try {
-      const res = await fetch(`http://localhost:9999/user/${currentUsername}`, {
+      const res = await fetch(`http://20.168.209.228/user/${currentUsername}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

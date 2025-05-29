@@ -2,7 +2,7 @@
   "name": "traffuture",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:9999",
+  "proxy": "20.168.209.228",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

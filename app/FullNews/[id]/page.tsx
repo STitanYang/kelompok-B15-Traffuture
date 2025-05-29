@@ -3,7 +3,7 @@ import Navbar from "@/Components/navbar";
 import Image from "next/image";
 
 const getNewsItem = async (id: string) => {
-  const res = await fetch(`http://localhost:9999/news/${id}`, {
+  const res = await fetch(`http://20.168.209.228/news/${id}`, {
     cache: "no-store",
   });
 

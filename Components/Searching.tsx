@@ -84,7 +84,7 @@ useEffect(() => {
         return;
       }
       
-      const apiUrl = `http://localhost:9999/traffic/${lokasiFormat}?time_start=${combinedStart}&time_end=${combinedEnd}`;
+      const apiUrl = `http://20.168.209.228/traffic/${lokasiFormat}?time_start=${combinedStart}&time_end=${combinedEnd}`;
 
       try {
         const res = await fetch(apiUrl);

@@ -80,7 +80,7 @@ const TrafficNewsSection = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch("http://localhost:9999/news");
+        const res = await fetch("http://20.168.209.228/news");
         const rawData: RawNewsItem[] = await res.json();
 
         const processedData: NewsCardItem[] = await Promise.all(

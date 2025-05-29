@@ -87,7 +87,7 @@ const NewsWriter: React.FC = () => {
     }
     try {
       const token = Cookies.get('token');
-      const response = await fetch("http://localhost:9999/news", {
+      const response = await fetch("http://20.168.209.228/news", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
